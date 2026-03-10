@@ -1,0 +1,41 @@
+# ======================
+# Laravel
+# ======================
+
+libapp/vendor/
+libapp/node_modules/
+libapp/storage/logs/*
+libapp/storage/*.key
+libapp/bootstrap/cache/*
+
+libapp/.env
+libapp/.env.*
+
+# IDE helper
+libapp/_ide_helper.php
+
+# ======================
+# Vue / Vite
+# ======================
+
+libfront/node_modules/
+libfront/dist/
+libfront/.vite/
+
+libfront/.env
+libfront/.env.*
+
+# ======================
+# System / IDE
+# ======================
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ======================
+# Logs
+# ======================
+
+*.log
