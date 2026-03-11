@@ -25,9 +25,3 @@ Fullstack web application for managing a personal book library.
 - Book groups
 - Reading status
 - Ratings and notes
-
-## Project Structure
-
-book-library-app
-├── libapp (Laravel API)
-└── libfront (Vue frontend)

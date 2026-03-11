@@ -1,27 +1,41 @@
-import { createRouter, createWebHistory } from "vue-router"
-import LoginView from "@/modules/auth/views/LoginView.vue"
-import RegisterView from "@/modules/auth/views/RegisterView.vue"
-import BooksView from "@/modules/books/views/BooksView.vue";
-
-const routes = [
-  { path: "/login", component: LoginView },
-  { path: "/register", component: RegisterView },
-  { path: "/books", component: BooksView, meta: { requiresAuth: true } },
-  { path: "/", redirect: "/books" },
-]
+import { createRouter, createWebHistory } from 'vue-router';
+import LoginView from '@/views/LoginView.vue';
+import RegisterView from '@/views/RegisterView.vue'; 
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes
-})
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView,
+      meta: { requiresGuest: true }
+    },
+    {
+      path: '/',
+      name: 'home',
+      component: { template: '<h1>Welcome on Dashboard!</h1>' }, 
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/views/RegisterView.vue'),
+      meta: { requiresGuest: true }
+    },
+  ]
+});
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = !!localStorage.getItem("token");
+  const isAuthenticated = !!localStorage.getItem('token');
+
   if (to.meta.requiresAuth && !isAuthenticated) {
-    next("/login");
+    next({ name: 'login' });
+  } else if (to.meta.requiresGuest && isAuthenticated) {
+    next({ name: 'home' });
   } else {
     next();
   }
 });
 
-export default router
+export default router;

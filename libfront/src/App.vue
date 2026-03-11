@@ -2,15 +2,13 @@
   <router-view />
 </template>
 
-<script>
-export default {
-  name: "App"
-}
-</script>
+<script setup>
+import { onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth.store';
 
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-}
-</style>
+const authStore = useAuthStore();
+
+onMounted(() => {
+  authStore.getUser();
+});
+</script>
