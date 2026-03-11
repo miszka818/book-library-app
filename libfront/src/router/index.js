@@ -23,6 +23,24 @@ const router = createRouter({
       component: () => import('@/views/RegisterView.vue'),
       meta: { requiresGuest: true }
     },
+    {
+      path: '/books/add',
+      name: 'add-book',
+      component: () => import('@/views/AddBookView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/',
+      name: 'home',
+      component: () => import('@/views/DashboardView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/catalog',
+      name: 'catalog',
+      component: () => import('@/views/CatalogView.vue'),
+      meta: { requiresAuth: true }
+    },
   ]
 });
 
