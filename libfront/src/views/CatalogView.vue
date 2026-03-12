@@ -5,9 +5,8 @@
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
         <div class="flex flex-col gap-2">
           <h1 class="text-4xl font-black tracking-tight text-slate-900 dark:text-slate-100 font-serif">Book Catalog</h1>
-          <p class="text-slate-500 dark:text-slate-400 text-lg">Explore and manage your personal collection of {{ booksStore.catalog.length }} titles.</p>
+          <p class="text-slate-500 dark:text-slate-400 text-lg">Explore and manage collection of {{ booksStore.catalog.length }} titles.</p>
         </div>
-        
         <div class="flex items-center gap-3">
           <div class="flex h-11 items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl shadow-inner">
             <button 
@@ -29,6 +28,27 @@
           <RouterLink to="/books/add" class="flex h-11 items-center gap-2 bg-primary text-white px-6 rounded-xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
             <span class="material-symbols-outlined">add</span> Add New
           </RouterLink>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row gap-4 mb-6 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex-1 relative">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+          <input 
+            v-model="searchQuery" 
+            type="text" 
+            placeholder="Search by title or author..." 
+            class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all" 
+          />
+        </div>
+        <div class="w-full md:w-48 relative">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">calendar_month</span>
+          <input 
+            v-model="filterYear" 
+            type="number" 
+            placeholder="Release Year" 
+            class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all" 
+          />
         </div>
       </div>
 
@@ -56,9 +76,9 @@
       </div>
 
       <div v-else-if="viewMode === 'grid'" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6">
-        <div 
-          v-for="book in paginatedBooks" :key="book.id"
-          class="group flex flex-col p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+        <RouterLink 
+          v-for="book in paginatedBooks" :key="book.id" :to="'/catalog/' + book.id"
+          class="group flex flex-col p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:shadow-xl hover:border-primary/30 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
         >
           <div class="flex items-center justify-center mb-2">
             <span v-if="book.tags && book.tags.length" class="px-2 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider text-center">
@@ -82,20 +102,16 @@
           </div>
           
           <div class="mt-auto flex justify-center w-full pt-2">
-            <button 
-              @click="addToMyBooks(book.id)" 
-              class="w-full bg-primary text-white py-2 rounded-lg font-bold text-xs shadow-lg shadow-primary/20 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              Add
-            </button>
+            <span class="w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 py-2 rounded-lg font-bold text-xs text-center group-hover:bg-primary group-hover:text-white transition-colors">
+              View Details
+            </span>
           </div>
-        </div>
+        </RouterLink>
       </div>
 
       <div v-else class="flex flex-col gap-6">
         <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
           <div class="flex flex-col">
-            
             <div 
               v-for="book in paginatedBooks" :key="book.id"
               class="group flex flex-col p-8 border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors"
@@ -112,12 +128,11 @@
                   </p>
                 </div>
                 <div class="flex shrink-0 gap-3">
-                  <button @click="addToMyBooks(book.id)" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
-                    <span class="material-symbols-outlined text-lg">add_circle</span> Add to My Books
-                  </button>
+                  <RouterLink :to="'/catalog/' + book.id" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-primary hover:text-white text-sm font-bold transition-all">
+                    <span class="material-symbols-outlined text-lg">visibility</span> View Details
+                  </RouterLink>
                 </div>
               </div>
-              
               <div class="flex flex-wrap items-center gap-x-12 gap-y-4 mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">
                 <div class="flex flex-col">
                   <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Published</span>
@@ -125,9 +140,12 @@
                 </div>
               </div>
             </div>
-
           </div>
         </div>
+      </div>
+
+      <div v-if="filteredBooks.length === 0" class="text-center py-20 text-slate-500">
+        No books found matching your criteria.
       </div>
 
       <div v-if="filteredBooks.length > itemsPerPage" class="flex items-center justify-between mt-12 py-6 border-t border-slate-200 dark:border-slate-800">
@@ -159,43 +177,41 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import MainLayout from '@/layouts/MainLayout.vue';
 import { useBooksStore } from '@/stores/books.store.js';
-import { useLibraryStore } from '@/stores/library.store.js';
 
 const booksStore = useBooksStore();
-const libraryStore = useLibraryStore();
 
 const viewMode = ref('grid');
 const selectedFilter = ref(null);
-
+const searchQuery = ref('');
+const filterYear = ref('');
 const currentPage = ref(1);
-const itemsPerPage = 12;
+const itemsPerPage = 15;
 
 const filteredBooks = computed(() => {
-  if (!selectedFilter.value) return booksStore.catalog;
-  
-  return booksStore.catalog.filter(book => 
-    book.tags && book.tags.some(t => t.name === selectedFilter.value)
-  );
+  return booksStore.catalog.filter(book => {
+    if (searchQuery.value) {
+      const q = searchQuery.value.toLowerCase();
+      const matchTitle = book.title.toLowerCase().includes(q);
+      const matchAuthor = (book.author || '').toLowerCase().includes(q);
+      if (!matchTitle && !matchAuthor) return false;
+    }
+    if (filterYear.value && book.release_year != filterYear.value) return false;
+    if (selectedFilter.value && (!book.tags || !book.tags.some(t => t.name === selectedFilter.value))) return false;
+    
+    return true;
+  });
 });
 
 const paginatedBooks = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
-  return filteredBooks.value.slice(start, end);
+  return filteredBooks.value.slice(start, start + itemsPerPage);
 });
 
-const totalPages = computed(() => Math.ceil(filteredBooks.value.length / itemsPerPage));
+const totalPages = computed(() => Math.ceil(filteredBooks.value.length / itemsPerPage) || 1);
 
-watch(selectedFilter, () => {
+watch([selectedFilter, searchQuery, filterYear], () => {
   currentPage.value = 1;
 });
-
-const addToMyBooks = async (bookId) => {
-  const success = await libraryStore.addFromCatalog(bookId);
-  if (success) {
-    alert("Book added to your library successfully!");
-  }
-};
 
 onMounted(() => {
   booksStore.fetchCatalog();

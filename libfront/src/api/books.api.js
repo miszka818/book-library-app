@@ -6,5 +6,8 @@ export const booksApi = {
   },
   addBook(bookData) {
     return apiClient.post('/books', bookData);
-  }
+  },
+  getBook(id) {
+    return apiClient.get(`/books/${id}`);
+  },
 };

@@ -20,7 +20,7 @@ class UserBookController extends Controller
 
         $userBooks = $user
             ->userBooks()
-            ->with(['book', 'groups'])
+            ->with(['book.tags', 'groups'])
             ->get();
 
         return UserBookResource::collection($userBooks);
@@ -41,7 +41,7 @@ class UserBookController extends Controller
         $user = Auth::user();
 
         return new UserBookResource(
-            $user->userBooks()->create($validated)->load(['book', 'groups'])
+            $user->userBooks()->create($validated)->load(['book.tags', 'groups'])
         );
     }
 
@@ -52,7 +52,7 @@ class UserBookController extends Controller
     {
         $this->authorize('view', $userBook);
 
-        return new UserBookResource($userBook->load(['book', 'groups']));
+        return new UserBookResource($userBook->load(['book.tags', 'groups']));
     }
 
     /**

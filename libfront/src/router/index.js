@@ -41,6 +41,24 @@ const router = createRouter({
       component: () => import('@/views/CatalogView.vue'),
       meta: { requiresAuth: true }
     },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('@/views/ProfileView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/catalog/:id',
+      name: 'book-details',
+      component: () => import('@/views/BookDetailsView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/library',
+      name: 'my-library',
+      component: () => import('@/views/MyLibraryView.vue'),
+      meta: { requiresAuth: true }
+    },
   ]
 });
 

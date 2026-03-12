@@ -4,8 +4,16 @@ import { booksApi } from '@/api/books.api.js';
 
 export const useBooksStore = defineStore('books', () => {
   const catalog = ref([]);
+  const currentBook = ref(null);
   const isLoading = ref(false);
   const error = ref(null);
+
+  const normalizeTags = (book) => {
+    if (book && book.tags) {
+      book.tags = book.tags.map(t => typeof t === 'string' ? { name: t } : t);
+    }
+    return book;
+  };
 
   const fetchCatalog = async (params = {}) => {
     isLoading.value = true;
@@ -15,6 +23,20 @@ export const useBooksStore = defineStore('books', () => {
       catalog.value = response.data.data || response.data;
     } catch (err) {
       error.value = err.response?.data?.message || 'Błąd podczas pobierania katalogu.';
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const fetchBook = async (id) => {
+    isLoading.value = true;
+    error.value = null;
+    currentBook.value = null;
+    try {
+      const response = await booksApi.getBook(id);
+      currentBook.value = response.data.data || response.data;
+    } catch (err) {
+      error.value = err.response?.data?.message || 'Błąd podczas pobierania książki.';
     } finally {
       isLoading.value = false;
     }
@@ -33,5 +55,5 @@ export const useBooksStore = defineStore('books', () => {
     return Array.from(tags);
   });
 
-  return { catalog, isLoading, error, fetchCatalog, addBook, availableTags };
+  return { catalog, currentBook, isLoading, error, fetchCatalog, fetchBook, addBook, availableTags };
 });

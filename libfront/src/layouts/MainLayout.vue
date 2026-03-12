@@ -12,15 +12,15 @@
       isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
     ]">
       <div class="p-6 flex items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div class="bg-primary rounded-lg p-2 text-white flex items-center justify-center">
+        <RouterLink to="/" class="flex items-center gap-3 group cursor-pointer" @click="isMobileMenuOpen = false">
+          <div class="bg-primary rounded-lg p-2 text-white flex items-center justify-center group-hover:bg-primary/90 transition-colors">
             <span class="material-symbols-outlined">auto_stories</span>
           </div>
           <div>
-            <h1 class="font-serif text-xl font-bold leading-none">Private Library</h1>
+            <h1 class="font-serif text-xl font-bold leading-none group-hover:text-primary transition-colors">Private Library</h1>
             <p class="text-[10px] text-slate-500 font-medium tracking-wide uppercase">Your Collection</p>
           </div>
-        </div>
+        </RouterLink>
         <button @click="isMobileMenuOpen = false" class="md:hidden text-slate-500 hover:text-primary">
           <span class="material-symbols-outlined">close</span>
         </button>
@@ -32,8 +32,12 @@
           <span>Dashboard</span>
         </RouterLink>
         <RouterLink to="/catalog" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
-          <span class="material-symbols-outlined">menu_book</span>
+          <span class="material-symbols-outlined">explore</span>
           <span>Catalog</span>
+        </RouterLink>
+        <RouterLink to="/library" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-colors" :class="[ $route.path === '/library' ? 'bg-primary/10 text-primary font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800' ]">
+          <span class="material-symbols-outlined">library_books</span>
+          <span>My Library</span>
         </RouterLink>
         
         <div class="pt-6 pb-2 px-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Account</div>
@@ -58,9 +62,13 @@
             <span class="material-symbols-outlined">menu</span>
           </button>
           
-          <div class="relative group flex-1 hidden sm:block">
+          <RouterLink to="/" class="md:hidden flex items-center gap-2 font-serif font-bold text-lg">
+            <span class="material-symbols-outlined text-primary">auto_stories</span> BookLoom
+          </RouterLink>
+          
+          <div class="relative group flex-1 hidden md:block">
             <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
-            <input type="text" placeholder="Search your library..." class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl py-2 pl-10 pr-4 focus:ring-2 focus:ring-primary/20 text-sm transition-all outline-none" />
+            <input type="text" placeholder="Search everywhere..." class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl py-2 pl-10 pr-4 focus:ring-2 focus:ring-primary/20 text-sm transition-all outline-none" />
           </div>
         </div>
         
@@ -70,7 +78,7 @@
               <p class="text-sm font-bold leading-none">{{ authStore.user?.name || 'User' }}</p>
               <p class="text-[10px] text-slate-500 uppercase font-bold mt-1">Reader</p>
             </div>
-            <div class="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold border-2 border-primary/30">
+            <div class="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold font-serif text-lg border-2 border-primary/30">
               {{ authStore.user?.name?.charAt(0) || 'U' }}
             </div>
           </div>

@@ -6,5 +6,8 @@ export const libraryApi = {
   },
   addToLibrary(data) {
     return apiClient.post('/user-books', data);
+  },
+  removeUserBook(id) {
+    return apiClient.delete(`/user-books/${id}`);
   }
 };
